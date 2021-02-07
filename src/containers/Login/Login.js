@@ -3,6 +3,8 @@ import { Button, Form } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
 import validator from 'validator';
 
+import API from '../../api';
+
 class Login extends Component {
     state = {
         email: '',
@@ -11,7 +13,7 @@ class Login extends Component {
             email: '',
             password: ''
         },
-        isLoggedIn: false
+        isLogged: false
     }
 
     emailChangeHandler = (event) => {
@@ -56,10 +58,21 @@ class Login extends Component {
             });
         }
         if(flag === 1){
-            if(this.state.email === 'admin@mail.com' && this.state.password === 'admin') {
+            const login = {
+                userName: email,
+                password: password
+            };
+            console.log("before api call", login)
+            API.post(`update/login`, login)
+                .then(res => {
+                    console.log(res.data);
+                    this.setState({
+                        isLogged: res.data
+                    })
+                })
+            if(this.state.isLoggedIn) {
                 this.setState({
-                    errors: nonErrors,
-                    isLoggedIn : true
+                    errors: nonErrors
                 });
             } else {
                 this.setState({
@@ -74,7 +87,7 @@ class Login extends Component {
         const border = {
             margin: '12% 40% 10% 40%'
         }
-        if(this.state.isLoggedIn){
+        if(this.state.isLogged){
             return <Redirect to='/Home' />
         }
         return (
@@ -101,7 +114,7 @@ class Login extends Component {
                         { this.state.errors.password !== '' ? <div>{this.state.errors.password}</div> : '' }
                     </Form.Group>
                     <Button 
-                        variant="primary" 
+                        variant="success" 
                         type="submit">Login</Button>
                 </Form>
             </div>

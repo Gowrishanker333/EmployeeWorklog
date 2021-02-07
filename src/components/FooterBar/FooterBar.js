@@ -5,7 +5,7 @@ class FooterBar extends Component {
   
   render() {
     const style = {
-      backgroundColor: '#0794f2',
+      backgroundColor: '#202020',
       color: 'white'
     }
     return (
